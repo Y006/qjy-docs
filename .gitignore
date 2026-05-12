@@ -1,0 +1,10 @@
+# 本地明文私有文档，不应提交到公开仓库。
+content/private/
+
+# 脚本自动生成的密码记录，不应提交。
+.generated-passwords.txt
+
+# Python 与系统临时文件。
+__pycache__/
+*.py[cod]
+.DS_Store

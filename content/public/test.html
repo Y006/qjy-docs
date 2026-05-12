@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试 HTML 文档</title>
+    <style>
+        :root {
+            --primary-color: #115EA2;
+            --primary-dark: #0D477A;
+            --accent-color: #8A5A12;
+            --text-dark: #2d3436;
+            --text-normal: #444;
+            --text-muted: #636e72;
+            --bg-gray: #f8f9fa;
+            --bg-white: #ffffff;
+            --bg-soft: #f3f8fc;
+            --border-light: #e9ecef;
+            --border-normal: #d6dde3;
+            --font-serif: "Georgia", "Times New Roman", Times, serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            font-family: var(--font-serif);
+            line-height: 1.7;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: #fff;
+            border-bottom: 4px solid var(--primary-dark);
+        }
+
+        .header-inner {
+            width: min(1080px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 32px 0;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #d1d5db;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: normal;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            max-width: 760px;
+            margin: 14px 0 0;
+            color: #e5e7eb;
+            font-size: 1.05rem;
+        }
+
+        .layout {
+            width: min(1080px, calc(100vw - 32px));
+            margin: 28px auto 56px;
+            display: grid;
+            grid-template-columns: 230px minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        nav {
+            position: sticky;
+            top: 18px;
+            padding: 16px;
+            border: 1px solid var(--border-normal);
+            background: var(--bg-white);
+        }
+
+        nav h2 {
+            margin: 0 0 10px;
+            font-size: 1rem;
+            color: var(--primary-dark);
+        }
+
+        nav a {
+            display: block;
+            padding: 7px 0;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            padding: 34px 42px;
+            border: 1px solid var(--border-normal);
+            background: var(--bg-white);
+            box-shadow: 0 18px 42px rgba(17, 94, 162, 0.1);
+        }
+
+        section {
+            padding: 26px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        section:first-child {
+            padding-top: 0;
+        }
+
+        section:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        h2 {
+            margin: 0 0 12px;
+            font-size: 1.65rem;
+            font-weight: normal;
+            color: var(--primary-dark);
+        }
+
+        h3 {
+            margin: 22px 0 8px;
+            font-size: 1.18rem;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin: 0 0 14px;
+            color: var(--text-normal);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .metric {
+            padding: 16px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-soft);
+        }
+
+        .metric strong {
+            display: block;
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+        }
+
+        .metric span {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        ul,
+        ol {
+            margin: 10px 0 0 22px;
+            padding: 0;
+        }
+
+        li {
+            margin: 6px 0;
+        }
+
+        blockquote {
+            margin: 18px 0;
+            padding: 12px 16px;
+            border-left: 4px solid var(--accent-color);
+            background: #fffaf0;
+            color: var(--text-normal);
+        }
+
+        table {
+            width: 100%;
+            margin: 16px 0;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-normal);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--bg-soft);
+            color: var(--primary-dark);
+        }
+
+        code {
+            padding: 0.12em 0.35em;
+            border: 1px solid var(--border-light);
+            background: var(--bg-gray);
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+        }
+
+        pre {
+            margin: 16px 0;
+            padding: 16px;
+            overflow-x: auto;
+            background: #111827;
+            color: #f9fafb;
+            font-family: var(--font-mono);
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: inherit;
+        }
+
+        .token-comment {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .token-keyword {
+            color: #93c5fd;
+        }
+
+        .token-string {
+            color: #fbbf24;
+        }
+
+        .token-number {
+            color: #c4b5fd;
+        }
+
+        .token-punctuation {
+            color: #e5e7eb;
+        }
+
+        .figure {
+            margin: 18px 0;
+            border: 1px solid var(--border-normal);
+            background: linear-gradient(135deg, #eaf4fb, #fff);
+        }
+
+        .figure-art {
+            height: 220px;
+            display: grid;
+            place-items: center;
+            background:
+                linear-gradient(90deg, rgba(17, 94, 162, 0.12) 0 1px, transparent 1px 100%),
+                linear-gradient(180deg, rgba(17, 94, 162, 0.12) 0 1px, transparent 1px 100%);
+            background-size: 24px 24px;
+        }
+
+        .figure-art svg {
+            width: min(420px, 86%);
+            height: auto;
+        }
+
+        figcaption {
+            padding: 10px 14px;
+            border-top: 1px solid var(--border-normal);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+        }
+
+        .notice {
+            padding: 14px 16px;
+            border: 1px solid #d8c08a;
+            background: #fff8e6;
+            color: #62440e;
+        }
+
+        .footer-meta {
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 2px solid var(--text-dark);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+        }
+
+        @media (max-width: 820px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                position: static;
+            }
+
+            main {
+                padding: 26px 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <p class="eyebrow">HTML Content Test</p>
+            <h1>测试 HTML 文档</h1>
+            <p class="subtitle">用于验证归档系统对富内容 HTML 页面的打开、排版、滚动、表格、代码块、锚点和响应式布局支持。</p>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="页面目录">
+            <h2>目录</h2>
+            <a href="#overview">概览</a>
+            <a href="#content">正文内容</a>
+            <a href="#table">表格测试</a>
+            <a href="#code">代码测试</a>
+            <a href="#media">媒体区域</a>
+            <a href="#conclusion">结论</a>
+        </nav>
+
+        <main>
+            <section id="overview">
+                <h2>概览</h2>
+                <p>这是一个内容较丰富的独立 HTML 页面，目的是测试从首页归档列表点击后，浏览器是否能够正确打开并渲染内容页面。</p>
+                <p>页面包含多级标题、长段落、列表、表格、代码块、引用、内联代码、图形区域和移动端响应式布局。</p>
+
+                <div class="summary-grid">
+                    <div class="metric">
+                        <strong>6</strong>
+                        <span>测试章节</span>
+                    </div>
+                    <div class="metric">
+                        <strong>3</strong>
+                        <span>典型内容组件</span>
+                    </div>
+                    <div class="metric">
+                        <strong>1</strong>
+                        <span>独立 HTML 文件</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="content">
+                <h2>正文内容</h2>
+                <p>研究汇报类页面通常不仅包含标题和链接，还会包含实验背景、方法描述、结果分析和后续计划。这个测试页面模拟这类内容密度，便于检查文字行宽、段落间距以及滚动体验。</p>
+                <h3>任务清单</h3>
+                <ul>
+                    <li>确认首页归档列表可以打开 HTML 文档。</li>
+                    <li>确认页面内锚点可以跳转到指定章节。</li>
+                    <li>确认长内容不会被顶部或侧边区域遮挡。</li>
+                    <li>确认移动端布局能够退化为单列结构。</li>
+                </ul>
+                <blockquote>
+                    这是一段引用内容，用于测试强调信息在页面中的视觉层级。引用常用于记录论文观点、实验假设或阶段性结论。
+                </blockquote>
+                <p class="notice">提示：如果从首页点击该文档能正常打开，说明 `files-data.js` 中的 HTML 链接配置是可用的。</p>
+            </section>
+
+            <section id="table">
+                <h2>表格测试</h2>
+                <p>表格用于验证边框、单元格间距、长文本换行和不同类型数据的展示效果。</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>项目</th>
+                            <th>状态</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HTML 跳转</td>
+                            <td>通过</td>
+                            <td>从归档列表打开 `content/test.html`。</td>
+                        </tr>
+                        <tr>
+                            <td>页面滚动</td>
+                            <td>待人工检查</td>
+                            <td>内容长度足够触发浏览器滚动。</td>
+                        </tr>
+                        <tr>
+                            <td>响应式布局</td>
+                            <td>待人工检查</td>
+                            <td>窄屏下目录和正文应上下排列。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="code">
+                <h2>代码测试</h2>
+                <p>内联代码示例：配置文件中的链接字段为 <code>file_path: 'content/test.html'</code>。</p>
+                <pre><code class="language-js">window.filesData = [
+    { date: '2026-05-12', title: '测试 HTML 文档', type: '测试', file_path: 'content/test.html' },
+];</code></pre>
+            </section>
+
+            <section id="media">
+                <h2>媒体区域</h2>
+                <p>下面的图形由内联 SVG 生成，不依赖外部图片文件，适合用于测试媒体区域的尺寸和布局。</p>
+                <figure class="figure">
+                    <div class="figure-art">
+                        <svg viewBox="0 0 520 220" role="img" aria-label="测试图形">
+                            <rect x="20" y="24" width="480" height="172" rx="8" fill="#ffffff" stroke="#115EA2" stroke-width="3"></rect>
+                            <circle cx="126" cy="110" r="48" fill="#d9ecf8" stroke="#115EA2" stroke-width="3"></circle>
+                            <rect x="218" y="70" width="196" height="24" fill="#115EA2"></rect>
+                            <rect x="218" y="110" width="152" height="18" fill="#8A5A12"></rect>
+                            <rect x="218" y="144" width="222" height="14" fill="#d6dde3"></rect>
+                            <text x="126" y="116" text-anchor="middle" font-family="Georgia" font-size="24" fill="#0D477A">HTML</text>
+                        </svg>
+                    </div>
+                    <figcaption>图 1：内联 SVG 测试图形，用于验证媒体块显示。</figcaption>
+                </figure>
+            </section>
+
+            <section id="conclusion">
+                <h2>结论</h2>
+                <ol>
+                    <li>该页面可以作为归档系统的 HTML 内容测试样例。</li>
+                    <li>如果后续加入 Markdown、PDF 或视频，也可以按同样方式扩展测试条目。</li>
+                    <li>建议保留该文件，作为修改首页索引逻辑后的快速回归测试入口。</li>
+                </ol>
+                <div class="footer-meta">路径：content/test.html ｜ 类型：HTML 测试文档 ｜ 日期：2026-05-12</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const jsTokenPattern = /(\/\/.*|\/\*[\s\S]*?\*\/|'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`|\b(?:const|let|var|function|return|if|else|for|while|true|false|null|undefined|window)\b|\b\d+(?:\.\d+)?\b|[{}[\]();:,.])/g;
+
+        function escapeHtml(value) {
+            return value
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function classifyToken(token) {
+            if (token.startsWith('//') || token.startsWith('/*')) return 'token-comment';
+            if (/^['"`]/.test(token)) return 'token-string';
+            if (/^\d/.test(token)) return 'token-number';
+            if (/^[{}[\]();:,.]$/.test(token)) return 'token-punctuation';
+            return 'token-keyword';
+        }
+
+        function highlightJavaScript(code) {
+            let result = '';
+            let cursor = 0;
+
+            code.replace(jsTokenPattern, (token, _match, offset) => {
+                result += escapeHtml(code.slice(cursor, offset));
+                result += `<span class="${classifyToken(token)}">${escapeHtml(token)}</span>`;
+                cursor = offset + token.length;
+                return token;
+            });
+
+            return result + escapeHtml(code.slice(cursor));
+        }
+
+        document.querySelectorAll('code.language-js').forEach(code => {
+            code.innerHTML = highlightJavaScript(code.textContent);
+        });
+    </script>
+</body>
+</html>
