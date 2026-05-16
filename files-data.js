@@ -10,11 +10,5 @@ window.filesData = [
         "title": "StarVLA 论文阅读笔记 — 测试文件",
         "type": "测试",
         "file_path": "content/public/starVLA测试文件.html"
-    },
-    {
-        "date": "2026-05-17",
-        "title": "Kaiwu 2026 无人机避障导航 · 实现总览",
-        "type": "public",
-        "file_path": "content/public/项目实现总览.html"
     }
 ];
