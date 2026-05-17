@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LaTeX 双栏学术会议 HTML 模板</title>
+
+  <!-- 数学公式：KaTeX 渲染 LaTeX 语法。正式离线使用时，可将这 3 个资源下载到本地。 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+
+  <style>
+    :root {
+      /* 页面尺寸：按 A4 论文版式设置 */
+      --paper-width: 210mm;
+      --paper-min-height: 297mm;
+
+      /* 页面内边距：分别控制上、右、下、左留白 */
+      --paper-padding-top: 18mm;
+      --paper-padding-right: 15mm;
+      --paper-padding-bottom: 18mm;
+      --paper-padding-left: 15mm;
+
+      /* 双栏正文的栏间距 */
+      --column-gap: 7mm;
+
+      /* 正文段落首行缩进：中文常用 2em；设为 0em 可取消缩进 */
+      --paragraph-indent: 0em;
+
+      /* 正文行间距：数值越大，行距越宽 */
+      --body-line-height: 1.25;
+
+      /* 正文段落间距：控制段落下方留白 */
+      --paragraph-spacing: .6em;
+
+      /* 文本颜色 */
+      --text-normal: #111;
+      --text-muted: #666;
+
+      /* 字体族：正文使用衬线字体，标题和作者信息使用无衬线字体 */
+      --serif: "Times New Roman", SimSun, "宋体", "Songti SC", serif;
+      --sans: Helvetica, Arial, SimSun, "宋体", "Songti SC", sans-serif;
+    }
+
+    html {
+      background: #e9e9e6;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text-normal);
+      font-family: var(--serif);
+      font-size: 9pt;
+      line-height: var(--body-line-height);
+      overflow-x: auto;
+    }
+
+    .paper {
+      width: var(--paper-width);
+      min-width: var(--paper-width);
+      min-height: var(--paper-min-height);
+      box-sizing: border-box;
+      margin: 24px auto;
+      padding:
+        var(--paper-padding-top) var(--paper-padding-right) var(--paper-padding-bottom) var(--paper-padding-left);
+      background: #fff;
+      box-shadow: 0 0 0 1px #d8d8d8;
+    }
+
+    .paper-header {
+      margin-bottom: 2.4em;
+    }
+
+    .paper-title {
+      margin: 0 0 .65em;
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 18pt;
+      font-weight: 700;
+      line-height: 1.12;
+    }
+
+    .paper-title span {
+      display: block;
+      margin-top: .28em;
+      font-size: 11pt;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .paper-subtitle {
+      margin: 0 0 1.2em;
+      text-align: center;
+      font-family: var(--sans);
+      color: var(--text-muted);
+    }
+
+    .authors-original {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 0;
+      margin: 1.2em auto 0;
+      font-family: var(--sans);
+      text-align: center;
+    }
+
+    .author-card {
+      padding: 0 .35em;
+      font-size: 10pt;
+      line-height: 1.22;
+      font-weight: 400;
+    }
+
+    .author-card strong {
+      display: block;
+      margin-bottom: .28em;
+      font-size: 12pt;
+      line-height: 1.15;
+      font-weight: 400;
+    }
+
+    .author-card span,
+    .author-card a {
+      display: block;
+      color: var(--text-normal);
+      text-decoration: none;
+    }
+
+    .authors-template-two {
+      width: 76%;
+      margin: 1.2em auto 0;
+      font-family: var(--sans);
+      text-align: center;
+      font-size: 10pt;
+      line-height: 1.25;
+    }
+
+    .authors-template-two strong,
+    .authors-template-two span {
+      display: block;
+      font-weight: 400;
+    }
+
+    .authors-template-two strong {
+      margin-bottom: .3em;
+      font-size: 12pt;
+    }
+
+    /* 
+  关键修改：
+  不再使用 column-count。
+  改成 grid 双栏，左右栏位置完全可控。
+*/
+    .paper-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--column-gap);
+      align-items: start;
+      text-align: justify;
+      counter-reset: equation algorithm;
+    }
+
+    .paper-col {
+      min-width: 0;
+    }
+
+    .paper-col h1,
+    .paper-col h2,
+    .paper-col h3 {
+      font-family: var(--serif);
+    }
+
+    .paper-col h1 {
+      margin: 1.2em 0 .35em;
+      font-size: 12pt;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .paper-col h2 {
+      margin: 1.1em 0 .3em;
+      font-size: 11pt;
+      line-height: 1.12;
+    }
+
+    .paper-col h3 {
+      margin: 1em 0 .25em;
+      font-size: 10pt;
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    p {
+      margin: 0 0 var(--paragraph-spacing);
+    }
+
+    .paper-body p {
+      text-indent: var(--paragraph-indent);
+    }
+
+    .paper-body a {
+      color: #0645ad;
+      text-decoration: underline;
+      overflow-wrap: anywhere;
+    }
+
+    .paper-body ul,
+    .paper-body ol {
+      margin: 0 0 var(--paragraph-spacing) 1.35em;
+      padding: 0;
+    }
+
+    .paper-body li {
+      margin: 0 0 .18em;
+    }
+
+    /*
+      数学公式：
+      - 正文里使用 \( ... \)；
+      - 独立公式使用 <div class="equation">\[ ... \]</div>；
+      - 编号由 CSS 自动生成，不再手写 <span class="eqno">(1)</span>。
+    */
+    .equation {
+      counter-increment: equation;
+      position: relative;
+      margin: .58em 0 .72em;
+      padding: 0 2.4em;
+      text-align: center;
+      font-style: normal;
+      line-height: 1.22;
+      break-inside: avoid;
+    }
+
+    .equation::after {
+      content: "(" counter(equation) ")";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-style: normal;
+      font-size: 9pt;
+      line-height: 1;
+    }
+
+    .equation .katex-display {
+      margin: 0;
+    }
+
+    .equation .katex,
+    .paper-body .katex {
+      font-size: 1em;
+    }
+
+    .algorithm {
+      counter-increment: algorithm;
+      margin: .55em 0 var(--paragraph-spacing);
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      break-inside: avoid;
+      text-align: left;
+    }
+
+    .algorithm figcaption {
+      margin: 0;
+      padding: .28em 0 .25em;
+      border-bottom: .75px solid currentColor;
+      font-weight: 700;
+      font-size: 10pt;
+      line-height: 1.15;
+    }
+
+    .algorithm figcaption::before {
+      content: "Algorithm " counter(algorithm) ". ";
+    }
+
+    .algorithm-lines {
+      counter-reset: alg-line;
+      list-style: none;
+
+      /* 关键：覆盖 .paper-body ol 的全局左缩进 */
+      margin: 0;
+      padding: .28em 0 .28em 2.35em;
+
+      border: 0;
+      font-size: 9pt;
+      line-height: 1.28;
+      text-align: left;
+    }
+
+    .algorithm-lines li {
+      counter-increment: alg-line;
+      position: relative;
+      margin: 0 0 .12em;
+      padding: 0;
+    }
+
+    .algorithm-lines li::before {
+      content: counter(alg-line);
+      position: absolute;
+      left: -2.05em;
+      width: 1.45em;
+      text-align: right;
+      color: #555;
+    }
+
+    .algorithm-lines .indent-1 {
+      padding-left: 1.45em;
+    }
+
+    .alg-keyword {
+      font-weight: 700;
+    }
+
+    .demo-figure {
+      margin: 1.2em 0;
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    .method-subfigure-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 5px 4px;
+      align-items: start;
+    }
+
+    .method-subfigure {
+      margin: 0;
+      text-align: center;
+    }
+
+    .method-subfigure figcaption {
+      margin: 0 0 .28em;
+      font-weight: 700;
+      font-size: 7px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .method-placeholder {
+      width: 100%;
+      aspect-ratio: 130 / 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      background:
+        linear-gradient(to bottom right, transparent calc(50% - .6px), #d0d0d0 calc(50% - .6px), #d0d0d0 calc(50% + .6px), transparent calc(50% + .6px)),
+        linear-gradient(to top right, transparent calc(50% - .6px), #d0d0d0 calc(50% - .6px), #d0d0d0 calc(50% + .6px), transparent calc(50% + .6px)),
+        linear-gradient(to right, transparent calc(50% - .5px), #d8d8d8 calc(50% - .5px), #d8d8d8 calc(50% + .5px), transparent calc(50% + .5px)),
+        linear-gradient(to bottom, transparent calc(50% - .5px), #d8d8d8 calc(50% - .5px), #d8d8d8 calc(50% + .5px), transparent calc(50% + .5px)),
+        #e6e6e6;
+      border: 1px solid currentColor;
+      box-sizing: border-box;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 9px;
+      line-height: 1;
+    }
+
+    .demo-caption {
+      margin-top: .35em;
+      font-weight: 700;
+      font-size: 8.5px;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .demo-table-wrap {
+      margin: 1.2em 0;
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    .demo-table-title {
+      font-weight: 700;
+      margin-bottom: .45em;
+      font-size: 8.5px;
+    }
+
+    .compact-data-table {
+      table-layout: fixed;
+      width: 100%;
+      font-size: 10px;
+      line-height: 1.2;
+      font-family: "Times New Roman", "Noto Serif SC", SimSun, "宋体", serif;
+    }
+
+    .compact-data-table th,
+    .compact-data-table td {
+      padding: 2.5px 1.5px;
+      text-align: center;
+      word-break: normal;
+    }
+
+    .compact-data-table th:first-child,
+    .compact-data-table td:first-child {
+      font-weight: 700;
+    }
+
+    .compact-data-table .size-cell {
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .compact-data-table .best-cell {
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 6px;
+      line-height: 1.08;
+      text-align: center;
+    }
+
+    th,
+    td {
+      padding: 2px 3px;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    thead tr:first-child {
+      border-top: 1.5px solid currentColor;
+    }
+
+    thead tr:last-child {
+      border-bottom: 1px solid currentColor;
+    }
+
+    tbody tr:last-child {
+      border-bottom: 1.5px solid currentColor;
+    }
+
+    svg text {
+      font-family: SimSun, "宋体", "Songti SC", serif;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      html {
+        background: #fff;
+      }
+
+      .paper {
+        margin: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <article class="paper">
+
+    <header class="paper-header">
+      <h1 class="paper-title">
+        LaTeX 双栏学术会议 HTML 模板
+        <span>A two-column academic conference template for Chinese and English papers</span>
+      </h1>
+      <div class="authors-original">
+        <div class="author-card">
+          <strong>作者一 / Author One</strong>
+          <span>作者单位一 / Affiliation One</span>
+          <span>城市，国家 / City, Country</span>
+          <a href="mailto:author1@example.com">author1@example.com</a>
+        </div>
+
+        <div class="author-card">
+          <strong>作者二 / Author Two</strong>
+          <span>作者单位二 / Affiliation Two</span>
+          <span>城市，国家 / City, Country</span>
+          <a href="mailto:author2@example.com">author2@example.com</a>
+        </div>
+
+        <div class="author-card">
+          <strong>作者三 / Author Three</strong>
+          <span>作者单位三 / Affiliation Three</span>
+          <span>城市，国家 / City, Country</span>
+          <a href="mailto:author3@example.com">author3@example.com</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="paper-body">
+
+      <!-- 左栏 -->
+      <section class="paper-col">
+        <h1>摘要</h1>
+
+        <h2>1.1 基础内容测试</h2>
+        <p>
+          本文档是一个面向学术会议论文排版的 HTML 模板，目标是在浏览器中模拟常见 LaTeX
+          双栏论文版式。模板参考 PubCSS 使用 HTML 与 CSS 排版学术出版物的思路，
+          将页面尺寸、页边距、双栏正文、标题区、作者信息、表格、图题和子图等常用结构整理为可直接复用的基础样式。
+        </p>
+
+        <p>
+          模板同时考虑中文与英文论文写作场景，默认使用适合中英文混排的字体栈，并保留 A4 页面、
+          印刷样式、表格横线、图表标题和占位图等会议论文中常见的排版元素。使用者可以在此基础上替换正文、
+          图表和作者信息，快速生成接近 LaTeX 双栏会议格式的 HTML 预览或打印输出。
+        </p>
+
+        <p><strong>关键词：HTML 模板；LaTeX 风格；双栏排版；学术会议；中英文支持</strong></p>
+
+        <h1>1. 基础样式测试</h1>
+
+        <p>
+          本节保留一组最小样张，用于检查标题、段落、强调、中英文混排以及常见论文元素在双栏中的显示效果。
+          中文正文示例包含 <strong>加粗文本</strong>、<em>斜体文本</em>、数字 12345 和英文术语
+          HTML、CSS、LaTeX，用来观察基础行距、段距、标点排版以及中英文之间的节奏。段落中也可以直接写入
+          paper width、column gap、body line height 等变量名，以检验英文短语在中文段落中的显示效果。
+        </p>
+
+        <p>
+          This paragraph checks English body text, inline <strong>bold text</strong>, <em>italic text</em>,
+          punctuation, and technical phrases in a narrow academic column. It is mainly used to test whether
+          English sentences, technical terms, and mixed Chinese-English expressions can keep a stable rhythm
+          under the two-column layout.
+        </p>
+
+        <p>
+          行内公式可以写成 \( y = f(x) + \varepsilon \)，用于检查数学符号与正文之间的基线、字号和间距是否协调。
+        </p>
+
+        <div class="equation">
+          \[
+          \begin{aligned}
+          E &= mc^2, \\
+          L(\theta) &= \sum_{i=1}^{n}\bigl(y_i - f(x_i;\theta)\bigr)^2 .
+          \end{aligned}
+          \]
+        </div>
+
+        <ul>
+          <li>无序列表用于检查缩进、项目符号、行距以及列表项之间的垂直间距。</li>
+          <li>较长列表项会自动换行，并保持与正文相同的栏宽，用于观察窄栏排版中的断行效果。</li>
+          <li>列表中可以包含中文、English terms、数字 12345 和技术词汇 HTML、CSS、LaTeX，以测试中英文混排效果。</li>
+          <li>当列表项内容较多时，需要检查第二行文字是否与第一行正文部分对齐，而不是与项目符号对齐。</li>
+        </ul>
+
+        <ol>
+          <li>第一步：加载原始数据，并对缺失值、异常值和重复记录进行初步检查。</li>
+          <li>第二步：完成数据预处理，包括格式统一、变量转换、尺度标准化和必要的样本筛选。</li>
+          <li>第三步：...</li>
+          <li>第五步：整理计算结果，输出图表、公式和文字说明，并检查其在双栏版式中的显示效果。</li>
+        </ol>
+
+        <h2>1.2 伪代码测试</h2>
+
+        <figure class="algorithm">
+          <figcaption>Score ranking</figcaption>
+          <ol class="algorithm-lines">
+            <li><span class="alg-keyword">Input:</span> samples \(X\), weights \(W\)</li>
+            <li><span class="alg-keyword">Output:</span> ranked list \(R\)</li>
+            <li><span class="alg-keyword">for each</span> \(x \in X\) <span class="alg-keyword">do</span></li>
+            <li class="indent-1">\(s[x] \leftarrow \operatorname{normalize}(x) \cdot W\)</li>
+            <li><span class="alg-keyword">end for</span></li>
+            <li>\(R \leftarrow \operatorname{sort\_by\_score}(s)\)</li>
+            <li><span class="alg-keyword">return</span> \(R\)</li>
+          </ol>
+        </figure>
+
+        <h1>2. 测试表格和图片样式</h1>
+
+        <p>
+          为检验双栏版式下图表元素的适配效果，本文设置了若干典型图表结构，包括单图、并列子图、
+          多方法对比图、矩阵式图像组合以及紧凑型数据表。相关样式主要用于观察图题、子图标题、
+          表格横线和数值单元格在有限栏宽中的显示效果。
+        </p>
+
+      </section>
+
+      <!-- 右栏 -->
+      <section class="paper-col">
+
+        <!-- 如果说右栏的开头是标题，那么不启用透明占位符；如果右栏开头是正文，请启用透明占位符 -->
+        <!-- <h1 style="visibility: hidden;">透明占位符</h1> -->
+
+
+
+        <h2>2.1 图片样式测试</h2>
+
+        <p>
+          图像样式覆盖了论文中较常见的几类展示方式。单图适合呈现整体结构或核心结果，并列子图适合进行
+          不同样本或不同方法之间的横向比较，多行多列图像则适合展示实验组、输入条件和方法结果之间的
+          对应关系。
+        </p>
+
+        <div class="demo-figure" style="--single-fig-width:40%;">
+          <figure style="width:var(--single-fig-width); margin:0 auto; text-align:center;">
+            <div class="method-placeholder" role="img" aria-label="单图占位图">Image</div>
+          </figure>
+
+          <div class="demo-caption">图 2. 单图占位展示。</div>
+        </div>
+
+        <div class="demo-figure">
+          <div style="
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    column-gap:8px;
+    align-items:start;
+  ">
+            <figure style="margin:0; text-align:center;">
+              <div class="method-placeholder" role="img" aria-label="子图 A">Image</div>
+              <figcaption style="margin-top:.35em; font-weight:700; font-size:8.5px; line-height:1.2;">
+                (a) 子图标题
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0; text-align:center;">
+              <div class="method-placeholder" role="img" aria-label="子图 B">Image</div>
+              <figcaption style="margin-top:.35em; font-weight:700; font-size:8.5px; line-height:1.2;">
+                (b) 子图标题
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0; text-align:center;">
+              <div class="method-placeholder" role="img" aria-label="子图 C">Image</div>
+              <figcaption style="margin-top:.35em; font-weight:700; font-size:8.5px; line-height:1.2;">
+                (c) 子图标题
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="demo-caption">图 3. 三个子图的对比展示。</div>
+        </div>
+
+        <div class="demo-caption">图 2. 单图占位展示。</div>
+        </div>
+
+        <div class="demo-figure">
+          <div class="method-subfigure-grid">
+            <figure class="method-subfigure">
+              <figcaption>(a) Method 1</figcaption>
+              <div class="method-placeholder" role="img" aria-label="Method 1 第一行占位图">Image</div>
+              <div class="method-placeholder" role="img" aria-label="Method 1 第二行占位图">Image</div>
+            </figure>
+            <figure class="method-subfigure">
+              <figcaption>(b) Method 2</figcaption>
+              <div class="method-placeholder" role="img" aria-label="Method 2 第一行占位图">Image</div>
+              <div class="method-placeholder" role="img" aria-label="Method 2 第二行占位图">Image</div>
+            </figure>
+            <figure class="method-subfigure">
+              <figcaption>(c) Method 3</figcaption>
+              <div class="method-placeholder" role="img" aria-label="Method 3 第一行占位图">Image</div>
+              <div class="method-placeholder" role="img" aria-label="Method 3 第二行占位图">Image</div>
+            </figure>
+            <figure class="method-subfigure">
+              <figcaption>(d) Method 4</figcaption>
+              <div class="method-placeholder" role="img" aria-label="Method 4 第一行占位图">Image</div>
+              <div class="method-placeholder" role="img" aria-label="Method 4 第二行占位图">Image</div>
+            </figure>
+          </div>
+          <div class="demo-caption">图 1. 多方法子图占位展示。</div>
+        </div>
+
+        <div class="demo-figure">
+          <div style="
+        display:grid;
+        grid-template-columns:22px repeat(3, minmax(0, 1fr));
+        column-gap:4px;
+        row-gap:5px;
+        align-items:center;
+      ">
+            <div></div>
+            <div style="text-align:center;font-weight:700;font-size:7px;line-height:1.1;">Input 1</div>
+            <div style="text-align:center;font-weight:700;font-size:7px;line-height:1.1;">Input 2</div>
+            <div style="text-align:center;font-weight:700;font-size:7px;line-height:1.1;">Input 3</div>
+
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+              <span
+                style="display:inline-block;transform:rotate(-90deg);font-weight:700;font-size:7px;white-space:nowrap;">
+                Method A
+              </span>
+            </div>
+            <div class="method-placeholder" role="img" aria-label="Method A Input 1">Image</div>
+            <div class="method-placeholder" role="img" aria-label="Method A Input 2">Image</div>
+            <div class="method-placeholder" role="img" aria-label="Method A Input 3">Image</div>
+
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+              <span
+                style="display:inline-block;transform:rotate(-90deg);font-weight:700;font-size:7px;white-space:nowrap;">
+                Method B
+              </span>
+            </div>
+            <div class="method-placeholder" role="img" aria-label="Method B Input 1">Image</div>
+            <div class="method-placeholder" role="img" aria-label="Method B Input 2">Image</div>
+            <div class="method-placeholder" role="img" aria-label="Method B Input 3">Image</div>
+          </div>
+
+          <div class="demo-caption">Figure 5. A figure with vertical text for illustration.</div>
+        </div>
+
+        <h2>2.2 表格基础样式测试</h2>
+
+        <p>
+          表格样式重点检查表头分隔线、行列间距、数值对齐和重点结果标记等细节。示例表格采用较小字号和
+          紧凑行距，以模拟会议论文中常见的实验结果表，并保证其在双栏版式中仍然具有较好的可读性。
+        </p>
+
+        <div class="demo-table-wrap">
+          <div class="demo-table-title">Table 1. A simple table with a header row.</div>
+          <table class="compact-data-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Size</th>
+                <th>2-Exp</th>
+                <th>3-Exp</th>
+                <th>4-Exp</th>
+                <th>5-Exp</th>
+                <th>6-Exp</th>
+                <th>7-Exp</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A</td>
+                <td class="size-cell">1280 × 720</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td class="best-cell">5</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>B</td>
+                <td class="size-cell">1280 × 720</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td class="best-cell">5</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>Ours</td>
+                <td class="size-cell">4096 × 2168</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>6</td>
+                <td class="best-cell">5</td>
+                <td>4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h1>参考文献</h1>
+
+        <p>[1] 作者甲, 作者乙, 作者丙, 等. 用于测试双栏论文模板参考文献换行、悬挂缩进、标点间距和中文长题名显示效果的文献题名[J]. 期刊名称, 年份, 卷号(期号): 起始页–终止页.</p>
+
+        <p>[2] Author A., Author B., Author C., et al. A long bibliographic entry title used only for testing line
+          wrapping, hanging indentation, punctuation spacing, and mixed Chinese-English reference layout[J]. <em>Journal
+            Name</em>, Year, Volume(Issue): Page–Page.</p>
+
+      </section>
+
+    </main>
+  </article>
+</body>
+
+</html>
