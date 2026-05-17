@@ -1,6 +1,12 @@
 window.filesData = [
     {
         "date": "2026-05-17",
+        "title": "LaTeX 双栏学术会议 HTML 模板",
+        "type": "public",
+        "file_path": "content/public/latex_two_column_template.html"
+    },
+    {
+        "date": "2026-05-17",
         "title": "测试 HTML 文档",
         "type": "public",
         "file_path": "content/public/test.html"
